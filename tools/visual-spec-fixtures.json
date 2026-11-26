@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "description": "Shared golden fixtures for Flock Visuals v1 inline charts, KPI tiles, tables, steps and callouts.",
+  "valid": [
+    {
+      "id": "bar_week_gaps_whiskers_ref",
+      "kind": "chart",
+      "spec": {
+        "type": "bar",
+        "title": "7-day calories vs target",
+        "subtitle": "5 logged days, 2 gaps",
+        "unit": "kcal",
+        "x": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        "series": [
+          {
+            "name": "Intake",
+            "values": [2150, 1980, null, 2340, null, 2050, 1840],
+            "low": [1950, 1800, null, 2100, null, 1850, 1680],
+            "high": [2350, 2160, null, 2580, null, 2250, 2000]
+          }
+        ],
+        "ref": { "value": 2200, "label": "Target" },
+        "caption": "UK CoFID 2021 estimates; unlogged days shown as honest gaps."
+      },
+      "expect": { "type": "bar", "seriesCount": 1, "pointCount": 7, "hasGaps": true, "hasWhiskers": true, "hasRef": true }
+    },
+    {
+      "id": "bar_multi_series_negative",
+      "kind": "chart",
+      "spec": {
+        "type": "bar",
+        "title": "Calorie balance vs target",
+        "unit": "kcal",
+        "x": ["Mon", "Tue", "Thu", "Sat", "Sun"],
+        "series": [
+          { "name": "Net delta", "values": [-50, -220, 140, -150, -360] },
+          { "name": "Projected", "values": [0, -100, 80, -90, -200], "predicted": true }
+        ],
+        "caption": "Negative bars draw cleanly below zero."
+      },
+      "expect": { "type": "bar", "seriesCount": 2, "pointCount": 5, "hasNegative": true }
+    },
+    {
+      "id": "bar_auto_flip_many_cats",
+      "kind": "chart",
+      "spec": {
+        "type": "bar",
+        "title": "Latency by subsystem",
+        "unit": "ms",
+        "x": [
+          "Prompt cache lookup",
+          "Tokenize context",
+          "Tool dispatch",
+          "SQLite journal write",
+          "Markdown parse",
+          "SVG hydration",
+          "WebView composite",
+          "Audio resample",
+          "Bridge roundtrip"
+        ],
+        "series": [
+          { "name": "p95", "values": [12, 28, 45, 9, 4, 2, 16, 62, 34] }
+        ],
+        "caption": "Many long category names flip to horizontal bars on narrow screens."
+      },
+      "expect": { "type": "bar", "autoFlip": true, "pointCount": 9 }
+    },
+    {
+      "id": "hbar_shorthand_items",
+      "kind": "chart",
+      "spec": {
+        "type": "hbar",
+        "title": "Today's macros vs reference",
+        "unit": "g",
+        "items": [
+          { "label": "Protein", "value": 124, "low": 112, "high": 136, "target": 140 },
+          { "label": "Carbs", "value": 210, "low": 190, "high": 230, "target": 260 },
+          { "label": "Fat", "value": 64, "low": 56, "high": 72, "target": 70 },
+          { "label": "Fibre", "value": 18, "low": 15, "high": 21, "target": 30 }
+        ],
+        "caption": "Shorthand items form with uncertainty intervals and target markers."
+      },
+      "expect": { "type": "hbar", "seriesCount": 1, "pointCount": 4, "hasWhiskers": true }
+    },
+    {
+      "id": "compare_alias",
+      "kind": "compare",
+      "spec": {
+        "title": "Model throughput (local vs cloud)",
+        "unit": "tok/s",
+        "items": [
+          { "label": "DeepSeek V4.1 Flash", "value": 148 },
+          { "label": "Gemini 4 Neon", "value": 112, "low": 98, "high": 126 },
+          { "label": "Local 9B (GPU)", "value": 64 },
+          { "label": "Predicted quantized", "value": 88, "predicted": true }
+        ],
+        "caption": "Compare block aliases cleanly to horizontal bars."
+      },
+      "expect": { "type": "hbar", "seriesCount": 1, "pointCount": 4 }
+    },
+    {
+      "id": "line_multi_ci_band",
+      "kind": "chart",
+      "spec": {
+        "type": "line",
+        "title": "Validation loss across epochs",
+        "subtitle": "Mean and 95% CI",
+        "x": ["E1", "E2", "E3", "E4", "E5", "E6"],
+        "series": [
+          {
+            "name": "Learned propagator",
+            "values": [0.92, 0.61, 0.44, 0.35, 0.31, 0.29],
+            "low": [0.85, 0.55, 0.39, 0.31, 0.27, 0.26],
+            "high": [0.99, 0.67, 0.49, 0.39, 0.35, 0.32]
+          },
+          {
+            "name": "Baseline MLP",
+            "values": [0.95, 0.74, null, 0.58, 0.54, 0.52]
+          }
+        ],
+        "ref": { "value": 0.30, "label": "Goal" },
+        "caption": "Confidence ribbon on learned model; null gap breaks baseline path."
+      },
+      "expect": { "type": "line", "seriesCount": 2, "pointCount": 6, "hasWhiskers": true, "hasGaps": true }
+    },
+    {
+      "id": "area_stacked",
+      "kind": "chart",
+      "spec": {
+        "type": "area",
+        "title": "Prompt tokens per turn",
+        "unit": "k",
+        "stacked": true,
+        "x": ["T1", "T2", "T3", "T4", "T5"],
+        "series": [
+          { "name": "Cached", "values": [0, 12.4, 15.8, 19.2, 22.1] },
+          { "name": "Fresh", "values": [12.4, 3.4, 3.4, 2.9, 1.8] }
+        ],
+        "caption": "Prompt cache hit ratio stays above 85% after turn 1."
+      },
+      "expect": { "type": "area", "stacked": true, "seriesCount": 2, "pointCount": 5 }
+    },
+    {
+      "id": "scatter_groups",
+      "kind": "chart",
+      "spec": {
+        "type": "scatter",
+        "title": "Latency vs quality score",
+        "xLabel": "First token (s)",
+        "yLabel": "Eval score (%)",
+        "unit": "%",
+        "series": [
+          {
+            "name": "Cloud",
+            "points": [
+              { "x": 0.8, "y": 84, "label": "DeepSeek Flash" },
+              { "x": 1.3, "y": 93, "label": "Gemini Neon" },
+              { "x": 2.4, "y": 95, "label": "Claude Opus" }
+            ]
+          },
+          {
+            "name": "Local",
+            "points": [
+              { "x": 0.4, "y": 72, "label": "Local 9B" },
+              { "x": 1.1, "y": 81, "label": "Gemma 12B" }
+            ]
+          }
+        ],
+        "caption": "Tap any point to inspect exact values."
+      },
+      "expect": { "type": "scatter", "seriesCount": 2, "pointCount": 5 }
+    },
+    {
+      "id": "donut_breakdown",
+      "kind": "chart",
+      "spec": {
+        "type": "donut",
+        "title": "Energy split today",
+        "unit": "kcal",
+        "items": [
+          { "label": "Carbs", "value": 840 },
+          { "label": "Fat", "value": 576 },
+          { "label": "Protein", "value": 496 }
+        ],
+        "caption": "Total 1,912 kcal across 3 meals."
+      },
+      "expect": { "type": "donut", "seriesCount": 1, "pointCount": 3 }
+    },
+    {
+      "id": "progress_targets",
+      "kind": "chart",
+      "spec": {
+        "type": "progress",
+        "title": "Daily nutrition targets",
+        "items": [
+          { "label": "Calories", "value": 1840, "target": 2200, "unit": "kcal", "tone": "ok" },
+          { "label": "Protein", "value": 124, "target": 140, "unit": "g", "tone": "accent" },
+          { "label": "Fibre", "value": 14, "target": 30, "unit": "g", "tone": "warn" },
+          { "label": "Salt", "value": 6.8, "target": 6.0, "unit": "g", "tone": "bad" }
+        ],
+        "caption": "Vertical tick marks 100% of daily reference."
+      },
+      "expect": { "type": "progress", "pointCount": 4 }
+    },
+    {
+      "id": "numbers_array_tones",
+      "kind": "numbers",
+      "spec": [
+        { "label": "Today", "value": 1840, "unit": "kcal", "delta": "-360 vs target", "tone": "ok" },
+        { "label": "Protein", "value": 124, "unit": "g", "note": "89% of target", "tone": "accent" },
+        { "label": "Fibre", "value": 14, "unit": "g", "delta": "low", "tone": "warn" },
+        { "label": "Salt", "value": 6.8, "unit": "g", "delta": "+0.8 over ref", "tone": "bad" },
+        { "label": "End-of-day est.", "value": 2120, "unit": "kcal", "tone": "predicted", "note": "Model estimate" },
+        { "label": "Logged days", "value": "5 / 7", "tone": "neutral" }
+      ],
+      "expect": { "itemCount": 6 }
+    },
+    {
+      "id": "numbers_object_wrapper",
+      "kind": "numbers",
+      "spec": {
+        "title": "Run summary",
+        "items": [
+          { "label": "Speed", "value": 142.5, "unit": "tok/s", "tone": "ok" },
+          { "label": "p-value", "value": 0.000012, "tone": "accent" }
+        ]
+      },
+      "expect": { "itemCount": 2 }
+    },
+    {
+      "id": "table_rich_bars_footer",
+      "kind": "table",
+      "spec": {
+        "title": "Top protein sources today",
+        "columns": [
+          "Food",
+          { "key": "grams", "label": "Portion", "unit": "g", "num": true },
+          { "key": "kcal", "label": "Energy", "unit": "kcal", "num": true },
+          { "key": "protein", "label": "Protein", "unit": "g", "num": true, "bar": true }
+        ],
+        "rows": [
+          ["Chicken breast, grilled", 180, 297, 56],
+          ["Greek yogurt 5%", 200, 194, 20],
+          ["Boiled eggs (2 large)", 110, 155, 13.8],
+          ["Wholemeal toast (2)", 76, 182, 7.2]
+        ],
+        "footer": ["Total", 566, 828, 97],
+        "caption": "Tap any column header to sort."
+      },
+      "expect": { "colCount": 4, "rowCount": 4, "hasFooter": true }
+    },
+    {
+      "id": "table_trailing_comma_and_objects",
+      "kind": "table",
+      "raw": "{\"title\":\"Cache benchmark\",\"columns\":[\"Engine\",\"Latency (ms)\",\"Hit %\"],\"rows\":[{\"Engine\":\"Neon\",\"Latency (ms)\":820,\"Hit %\":\"91%\"},{\"Engine\":\"DeepSeek\",\"Latency (ms)\":640,\"Hit %\":\"88%\"},],}",
+      "expect": { "colCount": 3, "rowCount": 2, "hasFooter": false }
+    },
+    {
+      "id": "steps_states",
+      "kind": "steps",
+      "spec": {
+        "title": "Visuals rollout",
+        "steps": [
+          { "label": "Audit visual specs", "detail": "Inventory SVGs, tables & grounding", "state": "done" },
+          { "label": "Phase 1: Chats app", "detail": "Zero-dep SVG/DOM + VISUAL_RULE", "state": "active" },
+          { "label": "Phase 2: Extended charts", "detail": "Interactive tooltips & responsive layout", "state": "pending" },
+          { "label": "Sign-off & merge", "detail": "Screenshots + tests green", "state": "pending" }
+        ],
+        "caption": "Horizontal on desktop, vertical timeline on phones."
+      },
+      "expect": { "stepCount": 4 }
+    }
+  ],
+  "callouts": [
+    { "id": "callout_note", "markdown": "> [!NOTE]\n> Unlogged days are left as gaps rather than zeroes.", "expectTone": "note", "expectTitle": "Note" },
+    { "id": "callout_caution", "markdown": "> [!CAUTION] Portion uncertainty\n> Restaurant curries vary by ±25%.", "expectTone": "caution", "expectTitle": "Portion uncertainty" },
+    { "id": "callout_tip", "markdown": "> [!TIP]\n> Tap any bar or point to inspect its exact value.", "expectTone": "tip", "expectTitle": "Tip" },
+    { "id": "callout_prediction", "markdown": "> [!PREDICTION]\n> Projected weekly average assumes 2,100 kcal for Sunday dinner.", "expectTone": "predicted", "expectTitle": "Prediction" }
+  ],
+  "invalid": [
+    { "id": "invalid_json", "kind": "chart", "raw": "{not valid json", "expectError": "not valid JSON" },
+    { "id": "empty_spec", "kind": "chart", "raw": "   ", "expectError": "empty" },
+    { "id": "unknown_chart_type", "kind": "chart", "raw": "{\"type\":\"pie3d\",\"items\":[{\"label\":\"A\",\"value\":1}]}", "expectError": "chart type" },
+    { "id": "nan_value", "kind": "chart", "raw": "{\"type\":\"bar\",\"items\":[{\"label\":\"A\",\"value\":\"NaN\"}]}", "expectError": "numeric" },
+    { "id": "bad_interval", "kind": "chart", "raw": "{\"type\":\"hbar\",\"items\":[{\"label\":\"A\",\"value\":50,\"low\":60,\"high\":70}]}", "expectError": "interval" },
+    { "id": "empty_series", "kind": "chart", "raw": "{\"type\":\"line\",\"x\":[\"A\"],\"series\":[]}", "expectError": "empty" },
+    { "id": "too_many_tiles", "kind": "numbers", "raw": "[{\"label\":\"1\",\"value\":1},{\"label\":\"2\",\"value\":2},{\"label\":\"3\",\"value\":3},{\"label\":\"4\",\"value\":4},{\"label\":\"5\",\"value\":5},{\"label\":\"6\",\"value\":6},{\"label\":\"7\",\"value\":7}]", "expectError": "more than 6" },
+    { "id": "too_few_steps", "kind": "steps", "raw": "{\"steps\":[{\"label\":\"Only one\"}]}", "expectError": "at least 2" },
+    { "id": "empty_table_rows", "kind": "table", "raw": "{\"columns\":[\"A\"],\"rows\":[]}", "expectError": "empty" },
+    { "id": "truncated_fence", "kind": "chart", "raw": "{\"type\":\"bar\",\"title\":\"Half written", "incomplete": true, "expectError": "cut off" }
+  ],
+  "security": [
+    {
+      "id": "xss_chart",
+      "kind": "chart",
+      "spec": {
+        "type": "hbar",
+        "title": "<script>alert(1)</script>Safe title",
+        "unit": "\"><img src=x onerror=alert(2)>",
+        "items": [
+          { "label": "<svg onload=alert(3)>Alpha", "value": 42 }
+        ],
+        "ref": { "value": 30, "label": "javascript:alert(4)" },
+        "caption": "<b>bold?</b> <script>evil()</script>"
+      }
+    },
+    {
+      "id": "xss_table",
+      "kind": "table",
+      "spec": {
+        "title": "<img src=x onerror=alert(1)>",
+        "columns": ["<script>x</script>Name", "Value"],
+        "rows": [["<a href=javascript:alert(2)>click</a>", 99]]
+      }
+    },
+    {
+      "id": "xss_numbers_steps",
+      "kind": "numbers",
+      "spec": [
+        { "label": "<iframe src=x>", "value": "<script>1</script>", "delta": "<img onerror=1>" }
+      ]
+    },
+    {
+      "id": "prototype_pollution",
+      "kind": "chart",
+      "raw": "{\"__proto__\":{\"kcPolluted\":true},\"constructor\":{\"prototype\":{\"kcPolluted2\":true}},\"type\":\"bar\",\"items\":[{\"label\":\"Clean\",\"value\":10}]}"
+    }
+  ]
+}

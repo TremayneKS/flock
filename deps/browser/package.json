@@ -1,0 +1,8 @@
+{
+  "name": "flock-tools",
+  "private": true,
+  "description": "The Browser tool for Flock: install.py copies this and package-lock.json into KCH_HOME/tools and runs npm ci. Regenerate with python tools/lock_deps.py.",
+  "dependencies": {
+    "@playwright/mcp": "0.0.83"
+  }
+}

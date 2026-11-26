@@ -1,0 +1,215 @@
+// Flock profile: this computer's own setup, written by hand. The app reads it and never writes it.
+//
+// You do NOT need one. Models can be added in Settings > Connections, and keys typed there are kept in
+// KCH_HOME/keys (one file per connection), never in a JSON file. A profile is for what the Settings page cannot know:
+// a model server to start and stop, keys you already keep somewhere else, extra paths, extra folders to fence off.
+//
+// To use it: copy this file to FLOCK_HOME/profile.json (default ~/.flock/profile.json; KCH_HOME / RAVEN_HOME also work), or point the FLOCK_PROFILE / KCH_PROFILE
+// environment variable at it. Delete the parts you don't need, then restart the app.
+//
+// Format: JSON with full-line // comments. Keys starting with "_" are notes and ignored. "~" means your home folder.
+// Layers: built-in defaults <- this file <- config.json (what you change in the app, only what differs).
+// Never put a key or password in this file: use key_env, key_file or key_provider (below).
+{
+  // ---- Folders (the defaults are shown in the comments) --------------------------------------------------------------
+  // "keys_dir": "~/.flock/keys",      keys typed into Settings, one file per connection id
+  // "state_dir": "~/.flock/state",    the model-server launcher's state (survives app restarts)
+  // "tools_dir": "~/.flock/tools",    where install.py puts the search server, Playwright MCP and Whisper
+
+  // ---- Built-in tools, when they live somewhere other than tools_dir --------------------------------------------------
+  // "playwright_mcp": "~/somewhere/node_modules/@playwright/mcp/cli.js",
+  // "search_python": "~/somewhere/venv/bin/python",        a Python with requirements-search.txt installed
+  // "browser_channel": "chrome",                           chrome, msedge or chromium (default: whichever is installed)
+
+  // ---- Updates of Flock itself (Settings > Updates) -------------------------------------------------------------
+  // "updates": {"auto": true, "repo": "https://github.com/OWNER/flock"},
+  //   auto: check on start and every 12 hours (false = only when you press Check now); repo: where to check (default:
+  //   the repository this copy came from; set it for a fork)
+
+  // ---- What the agent is told about you and your machine (goes in the system prompt, keep it short) ------------------
+  "prompt": {
+    "about": "",
+    "_about_example": "The user is Sam, a data scientist. Projects live in ~/code.",
+    "extra": [],
+    "_extra_example": ["My own scripts are in ~/bin and on PATH; run `ls ~/bin` to see them."]
+  },
+
+  // Folders put in front of PATH for the Bash tool, and folders Python plugins (key_provider) are imported from.
+  "path_extra": [],
+  "python_paths": [],
+
+  // ---- Connections (models) ------------------------------------------------------------------------------------------
+  // The default one ("" = the first in the list). The app remembers your last pick in config.json.
+  "endpoint": "",
+  "endpoints": [
+    {
+      "_note": "A model on this computer behind llama.cpp's llama-server (any OpenAI-compatible server works the same).",
+      "id": "local",
+      "name": "Local model (llama.cpp)",
+      "kind": "openai",
+      "base": "http://127.0.0.1:8080/v1",
+      "model": "local",
+      "context": 131072,
+      "max_output": 32768,
+      "timeout": 600,
+      "llama": true,
+      "vision": false,
+      "sampling": {"temperature": 0.6, "top_p": 0.95, "top_k": 20, "min_p": 0.0}
+    },
+    {
+      "_note": "Anthropic API (native Messages API with prompt caching and extended thinking).",
+      "id": "anthropic",
+      "name": "Anthropic API (Claude)",
+      "kind": "anthropic",
+      "base": "https://api.anthropic.com/v1",
+      "model": "claude-sonnet-5-5",
+      "context": 200000,
+      "vision": true,
+      "key_env": "ANTHROPIC_API_KEY"
+    },
+    {
+      "_note": "An API whose key is in an environment variable (set it before starting the app).",
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "kind": "openai",
+      "base": "https://api.deepseek.com/v1",
+      "model": "deepseek-chat",
+      "level_models": {"think": "deepseek-reasoner", "deep": "deepseek-reasoner"},
+      "context": 128000,
+      "key_env": "DEEPSEEK_API_KEY"
+    },
+    {
+      "_note": "An API whose key is in a file you keep elsewhere (one key per line: several keys fail over in turn).",
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "kind": "openai",
+      "base": "https://openrouter.ai/api/v1",
+      "model": "deepseek/deepseek-chat",
+      "context": 128000,
+      "key_file": "~/.config/openrouter/key",
+      "headers": {"X-Title": "Flock"}
+    }
+  ],
+  // Other connection fields:
+  //   "kind": "openai" (any OpenAI-compatible /v1 API), "opencode-go" (an OpenCode Go key),
+  //           "claude-code" (your Claude plan through the Claude Code CLI: no key, sign in with `claude` once),
+  //           "codex" (your ChatGPT plan through the Codex CLI: no key, `codex login` once),
+  //           "agy" (Antigravity CLI: no key, sign in with `agy` once; model name e.g. "gemini-4-neon").
+  //           The Claude and Codex plan kinds are added by themselves when their CLI is installed (ids "claude" and "chatgpt");
+  //           list them here only to change something, e.g. {"id": "claude", "model": "opus"}.
+  //   "group": "Claude"            optional group heading for the model picker
+  //   "no_thinking": true          this endpoint has no thinking/effort switch
+  //   "show_in_picker": false      keep connection active without listing it in the picker
+  //   "efforts": {"fast": "low", "think": "medium", "deep": "high"}   reasoning_effort sent for each level (Gemini, OpenAI;
+  //                                for "opencode-go" too, where "off" means thinking off)
+  //   "effort": "high"             claude-code / codex / agy only: the connection's default effort for new chats
+  //   "effort_levels": ["low", "medium", "high"]   claude-code / codex / agy only: offer fewer levels (a model that has fewer)
+  //   "level_models": {"think": "...", "deep": "..."}                a different model per level
+  //   "reasoning_param": true      send reasoning_effort high/max for Think/Deep (APIs that take it without a map)
+  //   "llama": true                llama.cpp extras: keep the prompt cache, Qwen-style thinking switch
+  //   "sampling": {...}            sent with every request (temperature, top_p, top_k, min_p, ...)
+  //   "headers": {...}             extra HTTP headers
+  //   "key_provider": "module:function"   your own Python function returning a list of keys (module found through
+  //                                       python_paths); "key_success": "module:function" is told which key worked.
+  // Hide a connection that was added by itself (e.g. the detected ChatGPT plan):
+  // "endpoints_removed": ["chatgpt"],
+
+  // ---- A launcher for the model server behind one connection (optional) ----------------------------------------------
+  // With this, the app starts the server when a message needs it, shows its progress, switches between choices and
+  // stops it (Settings > Runtime, and the model menu). The example starts llama-server with one of two model files.
+  "runtime": {
+    "enabled": false,
+    "endpoint": "local",
+    "label": "llama-server",
+    "command": ["llama-server", "-m", "~/models/{choice}.gguf", "--jinja", "-c", "{ctx}", "--port", "8080",
+                "-ngl", "99", "--host", "127.0.0.1"],
+    "cwd": "~",
+    "stop": "kill",
+    "choices": [
+      {"id": "qwen3-8b-q4_k_m", "label": "Qwen3 8B", "speed": "fast", "note": "fits 8 GB of VRAM"},
+      {"id": "qwen3-14b-q4_k_m", "label": "Qwen3 14B", "speed": "slower", "note": "needs 12 GB"}
+    ],
+    "choice": "qwen3-8b-q4_k_m",
+    "settings": {"ctx": 65536},
+    "setting_labels": {"ctx": "Context window"},
+    "ready": "server is listening|HTTP server listening",
+    "failed": "error: |failed to load model",
+    "start_note": "Loading a model takes a few seconds to a minute."
+  },
+  // Other launcher fields:
+  //   placeholders in "command": {choice}, any key of "settings", {stop_file}, {python} (the app's own Python)
+  //   "stop": "file"     instead of killing it, write {stop_file} and let your launcher shut itself down cleanly
+  //                      (for remote GPUs that must be released: a killed launcher could leave one running and billing)
+  //   "choices": [{"id", "label", "rate", "speed", "note"}], "unit": "credits"   rate = cost per hour, shown as it runs
+  //   "stopping" / "ended" / "ignore": regexes on its output; "progress": [["regex", "what it is doing"], ...]
+  //   "warm": true       send two tiny prompts once it is up (some GPUs compile kernels on first use)
+  //   "keep_up": true    it runs until you press Stop: if it ends any other way (a crash, the cloud reclaiming the GPU),
+  //                      the app starts it again (three failed starts in a row and it gives up). Clicking another
+  //                      choice never stops a running server: press Stop first.
+  //   "remote": {...}    for a launcher that rents a GPU elsewhere: lets Stop always work, even if the launcher was
+  //                      killed from outside while the GPU kept running (and billing). The run record is kept until the
+  //                      remote side says the GPU is gone; the model menu shows "Still running" with Stop; keep_up
+  //                      starts a new one only after the old one is confirmed gone. {remote_id} and the settings fill in:
+  //     "remote": {"label": "my cloud",
+  //                "id": "allocating \\S+ runtime (gpu-\\S+)",       regex on the launcher's output, group 1 = the id
+  //                "status": ["my-gpu", "status", "{remote_id}"],     exit 0 = still up, 1 = gone, else cannot tell
+  //                "stop": ["my-gpu", "stop", "{remote_id}"],         ends it; exit 0 = gone
+  //                "orphans": ["my-gpu", "orphans"],                  prints ids left up with no launcher (optional)
+  //                "check_min": 5}                                    how often to look again while one may be up
+
+  // Commands the agent's Bash tool refuses, besides the built-in ones (killing every Python process, this app or the
+  // model server's launcher): regexes, e.g. your own wrapper that restarts the app.
+  // "protect_commands": ["\\bmy-harness-wrapper\\s+(restart|close)\\b"],
+
+  // ---- Speech to text for the mic button (optional; python install.py --with-dictation sets up the default) ----------
+  "dictation": {
+    "enabled": "auto",
+    "_fields": "python (a Python with faster-whisper), model (the accurate pass: large-v3-turbo; small on a CPU), live_model (the words shown while you speak: small; base on a CPU), language (e.g. en; default: detected), device (auto, cuda, cpu), local_files_only, env, prompt (names and jargon to expect)",
+    "model": "large-v3-turbo",
+    "live_model": "small"
+  },
+
+  // ---- Meetings (the Meeting button) ----------------------------------------------------------------------------------
+  // Meetings needs no profile once `python install.py --with-meetings` has run. Change only what you need:
+  "meetings": {
+    "_fields": "enabled (false hides the button), port (8770), data (folder for meetings; default KCH_HOME/meetings), settings (a Meetings settings.json: your name, Whisper model, ...; see meetings/settings.py), label",
+    "port": 8770,
+    "_another_app": "to show some other meetings web app instead, give its url, start (command), cwd and env; app: \"meetings\" (or legacy \"kc-meetings\") makes anything else on its port an error",
+    "_example_other": {"url": "http://127.0.0.1:8770", "start": ["python", "~/meetings/app.py", "serve"], "cwd": "~/meetings"}
+  },
+
+  // ---- Extra MCP servers (tools from other programs) ------------------------------------------------------------------
+  // Claude Code's and Codex's MCP servers can also be linked in Settings > Tools > Import.
+  "mcp": {
+    "_example": {"command": "npx", "args": ["-y", "some-mcp-server@1.2.3"], "env": {}, "enabled": false}
+  },
+
+  // ---- Paths the agent's tools must never read (regexes, added to the built-in list of credential stores) -------------
+  "deny_extra": [
+    "[\\\\/]\\.config[\\\\/]openrouter[\\\\/]"
+  ],
+
+  // ---- This app's own code ------------------------------------------------------------------------------------------
+  // app_code: the folder the agent is told is "this app" (default: where the app runs from). After a turn that changed
+  // it, the chat says to reload the page or restart the app; nothing is restarted for you.
+  // Only for testing on a copy: point it at a throwaway clone.
+  "app_code": "",
+  // seconds a project's own test command (.flock.json (or legacy .nest.json / .raven.json / .kc-harness.json) {"test": ...} or "Test: ..." in project notes) may run
+  "test_timeout": 300,
+
+  // ---- Behaviour ----------------------------------------------------------------------------------------------------
+  "reasoning": "fast",
+  "compact_at": 0.85,
+  // a message waiting for a starting model server (the "runtime" launcher) gives up with an error after this many minutes.
+  // Each connection's "timeout" (seconds, default 600) is the longest silence from the model before an error.
+  "runtime_wait_min": 45,
+  // the Agent tool (subagents on any connection; Claude Code, Codex and Antigravity get it as harness_agent).
+  // start_servers: may a subagent start the "runtime" server when it is off (a rented GPU costs money).
+  // parallel: subagents at once on a remote API (a local llama.cpp server always takes one at a time).
+  "subagents": {"enabled": true, "max_depth": 2, "start_servers": false, "parallel": 4},
+
+  // ---- Chat sections (optional) ---------------------------------------------------------------------------------------
+  // "sections": [{"id": "general", "name": "General"}, {"id": "work", "name": "Work"}, {"id": "personal", "name": "Personal"}],
+  // "section_rules": [{"section": "work", "pattern": "\\b(sprint|release|deploy)\\b"}],
+  // "cleanup_rules": {"archive_prompts": ["^\\[auto\\]"], "archive_folders": ["[\\\\/]runs[\\\\/]"]}
+}

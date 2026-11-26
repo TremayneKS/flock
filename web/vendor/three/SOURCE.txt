@@ -1,0 +1,4 @@
+three.js 0.186.1 (https://threejs.org, npm "three"), MIT License: see LICENSE.
+three-viewer.js is three.js plus OrbitControls, GLTFLoader, STLLoader, OBJLoader, PLYLoader and RoomEnvironment,
+bundled and minified from tools/three (cd tools/three && npm install && node build.mjs).
+Loaded only when a 3D model is opened.

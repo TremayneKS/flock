@@ -1,0 +1,2 @@
+UTIF.js 3.1.0 (https://github.com/photopea/UTIF.js, npm "utif", UTIF.js as published), MIT License: see LICENSE.
+Loaded only when a TIFF the browser cannot show itself is opened. Deflate-compressed TIFFs need pako, which is not included.

@@ -1,0 +1,13 @@
+{
+  "name": "kch-three",
+  "private": true,
+  "type": "module",
+  "description": "Flock 3D model viewer: three.js and its loaders bundled into web/vendor/three/three-viewer.js (node build.mjs)",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "three": "0.186.1",
+    "esbuild": "^0.28.2"
+  }
+}

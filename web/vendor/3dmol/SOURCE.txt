@@ -1,0 +1,2 @@
+3Dmol.js 2.5.5 (https://3dmol.org, npm "3dmol", build/3Dmol-min.js as published), BSD-3-Clause: see LICENSE.
+Loaded only when a molecule file is opened.

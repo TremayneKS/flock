@@ -1,0 +1,2 @@
+mammoth 1.13.0 (https://github.com/mwilliamson/mammoth.js, npm "mammoth", mammoth.browser.min.js as published), BSD-2-Clause: see LICENSE.
+Loaded only when a .docx file is opened.

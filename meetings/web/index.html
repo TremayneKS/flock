@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Meetings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#161615">
+<link rel="icon" href="/static/icon.svg">
+<script src="/static/theme.js"></script>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header id="bar">
+  <div class="brand"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="5.5" width="2" height="5" rx="1"/><rect x="5.25" y="2" width="2" height="12" rx="1"/><rect x="9" y="4" width="2" height="8" rx="1"/><rect x="12.75" y="6" width="2" height="4" rx="1"/></svg>Meetings</div>
+  <button id="projectBtn" class="project" title="Choose a project"><span id="projectName">Choose a project</span><svg viewBox="0 0 16 16" class="chev"><path d="M4 6l4 4 4-4"/></svg></button>
+  <label class="search" id="searchWrap">
+    <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+    <input id="search" type="search" placeholder="Search meetings, notes and files" autocomplete="off" spellcheck="false">
+  </label>
+  <button id="meetingTitle" class="mtitle" title="Click to rename this meeting" hidden></button>
+  <div class="spacer"></div>
+  <div id="liveBar" hidden>
+    <div class="meter" title="How loud your microphone is"><span>You</span><i><b id="meterMic"></b></i></div>
+    <div class="meter" title="How loud the meeting audio is"><span>Them</span><i><b id="meterSys"></b></i></div>
+    <div class="timer"><span class="rec"></span><span id="timer">00:00</span></div>
+    <button id="pauseBtn" class="ghost">Pause</button>
+    <button id="endBtn" class="danger">End meeting</button>
+  </div>
+  <button id="importBtn" class="ghost" title="Add a meeting you already have a recording of">Import recording</button>
+  <button id="startBtn" class="primary">Start meeting</button>
+  <button id="themeBtn" class="iconbtn themebtn" title="Switch between light and dark"><svg class="sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3"/><path d="M8 1.5V3M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg><svg class="moon" viewBox="0 0 16 16"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1z"/></svg></button>
+</header>
+<div id="banner" hidden></div>
+
+<main id="grid">
+  <section id="col1" class="panel"></section>
+  <section id="col2" class="panel"></section>
+  <section id="col4" class="panel"></section>
+  <section id="col3" class="panel">
+    <header class="phead">
+      <h2>Assistant</h2>
+      <select id="modelPick" class="modelpick" aria-label="Which model answers" title="Which model answers" hidden></select>
+    </header>
+    <div id="statusLine"><span class="dot"></span><span id="statusText">Ready</span><span id="statusAge"></span></div>
+    <div id="helperStrip" hidden><span class="spin"></span><span id="helperText"></span><button id="helperStop" class="link">Stop</button></div>
+    <div id="chat" class="scroll"></div>
+    <div id="composer">
+      <div id="chips"></div>
+      <div class="box">
+        <textarea id="input" rows="1" placeholder="Ask the assistant anything" spellcheck="true"></textarea>
+        <button id="sendBtn" class="send" title="Send"><svg viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
+        <button id="stopBtn" class="send stop" title="Stop" hidden><svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" rx="1.5"/></svg></button>
+      </div>
+    </div>
+  </section>
+  <div class="gutter gx" data-drag="x"></div>
+  <div class="gutter gl" data-drag="yl"></div>
+  <div class="gutter gr" data-drag="yr"></div>
+  <div class="node nl" data-drag="x yl"></div>
+  <div class="node nr" data-drag="x yr"></div>
+</main>
+
+<div id="popover" class="pop" hidden></div>
+<dialog id="dialog"></dialog>
+<div id="dropHint" hidden>Drop to add to this project's files</div>
+
+<script src="/static/vendor/marked.min.js"></script>
+<script src="/static/vendor/purify.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

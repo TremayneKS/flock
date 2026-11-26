@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+tools/editor/node_modules/
+
+# Never in the repository: a machine's own setup, keys and app data (they live in FLOCK_HOME / KCH_HOME, default ~/.flock)
+profile.json
+*.key
+keys/
+.env
+.env.*
+.claude/settings.local.json
+.claude/
+meetings/settings.json

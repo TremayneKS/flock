@@ -1,0 +1,4 @@
+# Speech to text for the mic button (harness/whisper_worker.py). Optional: python install.py --with-dictation puts it in
+# KCH_HOME/tools/whisper-venv, and adds NVIDIA's CUDA libraries when nvidia-smi is found. The Whisper model itself
+# (large-v3-turbo by default, about 1.6 GB) downloads from Hugging Face the first time you use the mic.
+faster-whisper==1.2.1

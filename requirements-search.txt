@@ -1,0 +1,8 @@
+# The web research server (harness/servers/search.py: WebSearch, WebFetch, papers). Not needed by the app itself, which
+# uses only Python's standard library. install.py puts these in their own venv: KCH_HOME/tools/search-venv.
+ddgs==9.16.0
+httpx==0.28.1
+mcp==2.3.0
+trafilatura==2.3.1
+playwright==1.55.0
+pypdf==6.1.1
