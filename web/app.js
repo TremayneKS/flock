@@ -1059,10 +1059,12 @@ function finishTool(m, scope) {
 /* ---------------------------------------------------------------- subagents (harness/subagents.py)
    A subagent is its own embedded chat. In the parent chat it renders as a compact live status card (no wall of extra text
    cluttering the main thread); clicking it opens the subagent's chat directly so you can read, steer or prompt it. */
-function findRow(scope, id) {          // scope: a subagent block (its own steps), or null for the chat itself
+function findRow(scope, id) {          // scope: a subagent block (its own steps), a Group Chat live turn, or null for the chat itself
   if (!id) return null;
-  const rows = (scope ? scope.querySelector(':scope > .sub-steps') : $('msgs')).querySelectorAll(`.tool[data-id="${CSS.escape(id)}"]`);
-  for (const r of rows) if ((r.parentElement.closest('.subagent') || null) === scope) return r;
+  const steps = scope ? scope.querySelector(':scope > .sub-steps') : null;
+  const owner = steps ? scope : null;  // a Group Chat turn has no .sub-steps: its rows belong to no subagent block
+  const rows = (steps || scope || $('msgs')).querySelectorAll(`.tool[data-id="${CSS.escape(id)}"]`);
+  for (const r of rows) if ((r.parentElement.closest('.subagent') || null) === owner) return r;
   return null;
 }
 function subBlock(row) {

@@ -9,16 +9,21 @@ A local desktop coding agent that runs on your own computer, in a browser window
 The app is one small Python program (standard library only) plus a plain JavaScript page. No account, no telemetry, no
 cloud of its own: it talks only to the model you connect and the websites the agent visits.
 
+<p align="center"><img src="docs/screenshots/group-chat-and-editor.png" alt="A Group Chat in Flock: Claude, ChatGPT, Gemini and a DeepSeek worker fixing a signup page together, with the file they changed open in the built-in editor" width="100%"></p>
+
 ## What you get
 
 - **Plug in API keys in seconds.** First-run Quick Connect right inside the chat window (and **Settings > Connections > Add**),
   automatic detection of existing environment variables (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `DEEPSEEK_API_KEY`,
   `OPENROUTER_API_KEY`, etc.), and per-connection key files in `FLOCK_HOME/keys/` (mode 600, never stored in JSON, never sent back to the browser).
+  <br><br><img src="docs/screenshots/quick-connect.png" alt="First run: the Quick Connect card, with an API key detected from the environment" width="820"><br><br>
 - **Multi-model Group Chats.** Put 2+ models (Claude, ChatGPT/Codex, Gemini, DeepSeek, or local models) in one shared room
   to collaborate on a goal in turns with delta-only Room Board delivery, live inline thinking and tool traces, per-model family
   color styling, soft turn budgets, Pass Baton, live steering, optional asynchronous **Shared Worker** or capped **Open** subagent
   policies (off / 1 shared worker / max 3 open), unanimous sign-off, anti-loop fuse, and full or mid-chat **Group Chat Forking**
   with fresh independent member sessions.
+  <br><br><img src="docs/screenshots/group-chat-handoff.png" alt="Models handing work to each other in a Group Chat: ChatGPT passes the phone check to Gemini, which picks it up and reports back" width="820"><br><br>
+  <img src="docs/screenshots/group-chat-setup.png" alt="Setting up a Group Chat: pick the council models and their order, a shared worker, and a turn budget" width="400"><br><br>
 - **Embedded Subagents on any model.** Any chat can delegate work to a subagent on *any* connected model (e.g. a Claude chat
   calling a DeepSeek or local Ollama subagent, or vice versa) via the `Agent` tool (for API/local models) or the `harness_agent`
   MCP server (for Claude Code, Codex, and Antigravity CLIs). Every subagent is a real interactive child chat under its parent:
@@ -29,13 +34,16 @@ cloud of its own: it talks only to the model you connect and the websites the ag
   sortable searchable tables with inline proportion bars (```` ```table ```` and auto-upgraded Markdown tables with Copy TSV),
   step timelines (```` ```steps ````), and callouts (`[!NOTE]`, `[!CAUTION]`, `[!TIP]`, `[!PREDICTION]`). Backticked local paths to
   images, audio, or video render inline as zoomable lightboxes and media players with a fullscreen video viewer.
+  <br><br><img src="docs/screenshots/visuals-and-subagent.png" alt="A chat with stat tiles, a stacked bar chart, a callout and a sortable table, plus a DeepSeek subagent the main model called" width="820"><br><br>
 - **Chat, files and preview side by side.** A collapsible chat list with editable **Sections** (`General`, `Work`, `Personal`),
   nested groups, multi-select, archive/cleanup with one-click Undo, chat **Forking** across any engine, a file tree you can drag
   files from into the message, a code editor (CodeMirror), and a live preview of the project's pages.
+  <br><br><img src="docs/screenshots/chat-and-live-preview.png" alt="Chat on the left, a live preview of the project's page on the right" width="820"><br><br>
 - **A viewer for every common file.** Images (zoom and pan), PDF (view and annotate), video and audio, rendered markdown, CSV and genomics
   tables (VCF, BED, GFF, SAM), JSON and XML trees, Jupyter notebooks, Word, Excel and PowerPoint, ZIP and TAR archives,
   3D models (glTF, STL, OBJ, PLY), molecules (PDB, mmCIF, SDF, MOL2, XYZ), FASTA/FASTQ statistics, fonts, SQLite tables,
   and a hex view for anything else. Text files switch between View and Source. All offline.
+  <br><br><img src="docs/screenshots/file-viewers.png" alt="Built-in viewers and editors: an editable CSV table, a 3D model, rendered Markdown and a JSON tree" width="820"><br><br>
 - **The tools a coding agent needs:** Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, a real Browser
   (Playwright: open, click, type, screenshot, console, and a check that reads chart text from canvases), View (native vision),
   Computer (opt-in screen & desktop control with explicit Allow/Deny cards and Esc safety stop), Agent (subagents), TodoWrite,
@@ -44,6 +52,7 @@ cloud of its own: it talks only to the model you connect and the websites the ag
   long commands show live activity and their latest output line; running turns survive app restarts and reconnect cleanly.
 - **Fast, Think, Deep (plus native CLI effort levels).** One switch per chat: no thinking, thinking, or deep thinking; Claude Code,
   Codex, and Antigravity connections expose their native effort levels (`Low` to `Max`).
+  <br><br><img src="docs/screenshots/model-picker.png" alt="The model picker: every connected model with its status, and the Fast / Think / Deep switch" width="400"><br><br>
 - **Long chats that stay cheap.** The system prompt and tool list never change mid-chat, so providers' prompt caches
   keep hitting. Near the context limit (default 85%) the chat is compacted into a summary that keeps your requests, the
   chat's notes and its turn log.

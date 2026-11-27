@@ -636,7 +636,7 @@
           const idx = selected.indexOf(ep.id);
           const on = idx >= 0;
           const st = (S.statuses || {})[ep.id];
-          const dotCls = st ? (st.ok ? 'ok' : 'bad') : '';
+          const dotCls = st ? ((st.ok || st.state === 'ready') ? 'ok' : 'bad') : '';   // statuses carry .state, not .ok
           const row = el('div', 'grp-ep-row' + (on ? ' on' : ''));
           const fCls = famClass(ep.id, ep.name).trim();
           row.innerHTML =
